@@ -14,11 +14,18 @@ export default {
         }
     },
 
+    computed : {
+
+        isTagExisting() {
+            return this.tags.includes(this.newTag)
+        } 
+    },
+
     methods: {
 
         /* AGGIUNTA DEL NUOVO TAG */
         addNewTag() {
-            if (this.newTag) {
+            if (this.newTag  && !this.isTagExisting) {
                 this.tags.push(this.newTag)
 
                 this.newTag = ""
@@ -55,7 +62,7 @@ export default {
 'V-MODEL' = RECUPERIAMO IL VALORE INSERITO DALL'UTENTE , 
 'V-BIND:CLASSE = CI PERMETTE DI DARE UNA CLASSE DINAMICA -->
     <input type="text" v-model.trim="newTag" @keydown.enter="addNewTag" @keydown.tab.prevent="addNewTag"
-        :class=" { 'tag-existing' : tags.includes(newTag) }">
+        :class=" { 'tag-existing' : isTagExisting }">
 
 </template>
 
