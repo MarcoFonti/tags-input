@@ -14,18 +14,18 @@ export default {
         }
     },
 
-    computed : {
+    computed: {
 
         isTagExisting() {
             return this.tags.includes(this.newTag)
-        } 
+        }
     },
 
     methods: {
 
         /* AGGIUNTA DEL NUOVO TAG */
         addNewTag() {
-            if (this.newTag  && !this.isTagExisting) {
+            if (this.newTag && !this.isTagExisting) {
                 this.tags.push(this.newTag)
 
                 this.newTag = ""
@@ -44,32 +44,73 @@ export default {
 <!-- HTML -->
 <template>
 
-    <!-- TAG -->
-    <div v-for="(tag, index) in tags">{{ index + ' : ' + tag }}
+    <div class="tags-input-wrapper">
 
-        <!-- RIMOVI TAG -->
-        <a href="#" @click.prevent="removeTag(index)">&times;</a>
+        <!-- TAG -->
+        <span class="tag-item" v-for="(tag, index) in tags" :key="index">{{ index + ' : ' + tag }}
+
+            <!-- RIMOVI TAG -->
+            <a class="remove-tag" href="#" @click.prevent="removeTag(index)">&times;</a>
+        </span>
+
+        <!-- 'KEYDOWN.ENTER' = ALL'INVIO , 
+            '$EVENT.TARGET.VALUE' = OTTINIAMO IL VALORE DELL'INPUT, 
+            'KEYDOWN.TAB.PREVENT' = ALL'INVIO DEL TAB , 
+            'V-MODEL' = RECUPERIAMO IL VALORE INSERITO DALL'UTENTE , 
+            'V-BIND:CLASSE = CI PERMETTE DI DARE UNA CLASSE DINAMICA -->
+        <input class="tag-input" type="text" v-model.trim="newTag" @keydown.enter="addNewTag"
+            @keydown.tab.prevent="addNewTag" :class="{ 'tag-exists': isTagExisting }">
+
     </div>
 
-    <hr>
-
-    <!-- NUOVO TAG -->
-    {{ newTag }}
-
-    <!-- 'KEYDOWN.ENTER' = ALL'INVIO , 
-'$EVENT.TARGET.VALUE' = OTTINIAMO IL VALORE DELL'INPUT, 
-'KEYDOWN.TAB.PREVENT' = ALL'INVIO DEL TAB , 
-'V-MODEL' = RECUPERIAMO IL VALORE INSERITO DALL'UTENTE , 
-'V-BIND:CLASSE = CI PERMETTE DI DARE UNA CLASSE DINAMICA -->
-    <input type="text" v-model.trim="newTag" @keydown.enter="addNewTag" @keydown.tab.prevent="addNewTag"
-        :class=" { 'tag-existing' : isTagExisting }">
 
 </template>
 
 <!-- CSS -->
 <style scoped>
-.tag-existing {
-    color: red;
-    text-decoration: line-through;
-}
+    .tag-input.tag-exists {
+        color: red;
+        text-decoration: line-through;
+    }
+
+    .tags-input-wrapper {
+        background: #fff;
+        padding: 0.5em;
+        border: 1px solid #dbdbdb;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        min-height: 36px;
+        box-sizing: border-box;
+    }
+
+    .tag-item {
+        color: #212529;
+        background-color: #eee;
+        margin-right: 0.3em;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-right: 1.25em;
+        padding-left: 0.6em;
+    }
+
+    .tag-input {
+        color: #495057;
+        flex: 1;
+        background: transparent;
+        border: none;
+    }
+
+    .tag-input:focus {
+        outline: none;
+    }
+
+    a.remove-tag {
+        text-decoration: none;
+    }
 </style>
