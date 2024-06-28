@@ -7,19 +7,30 @@ export default {
     data() {
         return {
             /* ARRAY DI PARTENZA */
-            tags: ["vue", "react", "angular"],
+            tags: [...this.selectedTags],
 
             /* DATI CHE INSERIRA L'UTENTE */
             newTag: ''
         }
     },
 
-    computed: {
+    /* PROPS CHE RICEVE UN ARRAY E DI DEFAULT E' UN ARRAY VUOTO */
+    props : { 
+        selectedTags: {
+            type : Array, 
+            default: () => []
+        }
+    },
 
+    /* COMPUTED PER VERIFICARE CHE L'UTENTE NON INSERISCA TAG GIA' ESISTENTI */
+    computed: {
         isTagExisting() {
             return this.tags.includes(this.newTag)
         }
     },
+
+    /* EMIT */
+    emit: ['change'],
 
     methods: {
 
@@ -29,12 +40,16 @@ export default {
                 this.tags.push(this.newTag)
 
                 this.newTag = ""
+
+                /* RICHIAMO EMIT E PASSO COME PARAMETRO I TAGS AGGIORNATI */
+                this.$emit('change', this.tags)
             }
         },
 
         /* RIMOVO TAG */
         removeTag(index) {
             this.tags.splice(index, 1)
+            this.$emit('change', this.tags)
         }
     },
 };
